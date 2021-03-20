@@ -3,6 +3,7 @@ Electrochemistry functions that I use on my day to day. It requires numpy instal
 
 ```python
 from echem_fun import *
+# To get help of any function:
 help(ilim)
 ```
 
@@ -11,5 +12,6 @@ help(ilim)
 
 from echem_fun import *
 
+# Calculate the limiting current of a microdisc electrode with a=10 um and default parameters:
 ilim = ilim(a=1e-4)
 ```
