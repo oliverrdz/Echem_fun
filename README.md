@@ -11,7 +11,14 @@ help(ilim)
 ```python
 
 from echem_fun import *
+from plotting import *
 
-# Calculate the limiting current of a microdisc electrode with a=10 um and default parameters:
-ilim = ilim(a=1e-4)
+import numpy as np
+
+t = np.linspace(1e-3, 1, 1000)
+tsqrt = 1/np.sqrt(t)
+
+i = mahon_Oldham(t, a=10e-4)
+
+plot(tsqrt, i*1e9, '$t^{-1/2}$ / s$^{-1/2}$', '$i$ / nA')
 ```

@@ -17,17 +17,17 @@ R = 8.3145 # J/molK
 T = 298 # K
 
 def ilim_disc(n=1, D=1e-5, C=1e-6, a=12.5e-4):
-'''
+    '''
     Returns the limiting current in A of a microdisc with a=10 um and default parameters:
 
     from echem_fun import *
     ilim = ilim_disc(a=10e-4)
-'''
+    '''
     ilim = 4*n*F*D*C*a
     return ilim
 
 def shoup_Szabo(t, n=1, D=1e-5, C=1e-6, a=10e-4):
-'''
+    '''
     Returns the current of a microdisc electrode of a=10 um according to the Shoup and Szabo equation. It also accepts numpy arrays for the time.
     Chronoamperometric current at finite disk electrodes
     Shoup and Szabo, Journal of Electroanalytical Chemistry, 1982, 140, 237-245
@@ -35,14 +35,14 @@ def shoup_Szabo(t, n=1, D=1e-5, C=1e-6, a=10e-4):
     from echem_fun import *
     t = 1 # [s], time to calculate the current
     i = shoup_Szabo(t, a=10e-4)
-'''
+    '''
     tau = D*t/a**2
     iNorm = 0.7854 + 0.4431/np.sqrt(tau) + 0.2146*np.exp(-0.3911/np.sqrt(tau))
     i = 4*n*F*D*C*a
     return i
 
 def mahon_Oldham(t, n=1, D=1e-5, C=1e-6, a=10e-4):
-'''
+    '''
     Returns the current of a microdisc electrode of a=10 um according to the Mahon and Oldham equaiton. It also accepts numpy arrays for the time.
     Diffusion-controlled chronoamperometry at a disk electrode
     Mahon and Oldham, Analytical Chemistry, 2005, 77, 6100-6101
@@ -50,7 +50,7 @@ def mahon_Oldham(t, n=1, D=1e-5, C=1e-6, a=10e-4):
     from echem_fun import *
     t = 1 # [s], time to calculate the current
     i = mahon_Oldham(t, a=10e-4)
-'''
+    '''
 
     # Written for a reduction
     s = D*t/a**2
