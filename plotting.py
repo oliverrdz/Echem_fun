@@ -14,7 +14,7 @@ def plot(x, y, xlab, ylab, fig=1, mark='-'):
     format_plot()
     plt.show()
 
-def plot2(x1, y1, x2, y2, xlab, ylab, lab1, lab2, fig=1, mark1='-', mark2='--'):
+def plot2(x1, y1, lab1, mark1, x2, y2, lab2, mark2, xlab, ylab, fig=1):
     plt.figure(fig)
     plt.plot(x1, y1, mark1, label=lab1)
     plt.plot(x2, y2, mark2, label=lab2)
