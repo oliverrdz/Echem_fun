@@ -11,7 +11,8 @@ def format_plot(xlab, ylab, show):
     if show:
         plt.show()
 
-def plot(x, y, lab, xlab, ylab, fig=1, mark=0, show=False):
+def plot(x, y, lab, xlab, ylab, mark=0, fig=1, show=False):
+    plt.figure(fig)
     ny = len(y)
     for i in range(ny):
         if mark:
