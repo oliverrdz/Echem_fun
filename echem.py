@@ -23,46 +23,31 @@ class Voltammetry(Disc):
     '''
     '''
 
-    def __init__(self, E, E0=0, DR=1e-5):
-        super().__init__()
+    def __init__(self, E, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5):
+        super().__init__(a, n, DO, CO)
         self.E = E
         self.E0 = E0
         self.DR = DR
+        self.cv(k0, alpha)
 
-    def reversible(self):
-        f = 1 + (self.DO/self.DR)*np.exp(self.n*F*(self.E-self.E0)/(R*T))
-        self.i_rev = -self.iLim/f
-
-    def irreversible(self, k0=1e-3, alpha=0.5):
-        '''
-        Not sure about this
-        '''
-        self.k0 = k0
-        self.alpha = alpha
-        self.Theta = 1 # Limiting case
-        self.kappa = self.k0*np.exp(-self.alpha*self.n*F*(self.E-self.E0)/(R*T))
-        i = (self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
-        self.i_irev = -i
-
-    def quasireversible(self, k0=1e-3, alpha=0.5):
+    def cv(self, k0, alpha):
         self.k0 = k0
         self.alpha = alpha
         self.Theta = 1 + (self.DO/self.DR)*np.exp(self.n*F*(self.E-self.E0)/(R*T))
         self.kappa = self.k0*np.exp(-self.alpha*self.n*F*(self.E-self.E0)/(R*T))
-        i = (self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
-        self.i_qrev = -i
+        self.i = -(self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
 
 
 
 class Chronoamperometry(Disc):
 
-    def __init__(self, t, E=-1, DR=1e-5, E0=0, k0=1e-3, alpha=0.5):
-        super().__init__()
+    def __init__(self, t, E=-1, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5):
+        super().__init__(a, n, DO, CO)
         self.t = t
         self.E = E
         self.DR = DR
         self.E0 = E0
-        self.kinetic_limited(k0, alpha)
+        self.ca(k0, alpha)
 
     def fun(self, D):
         s = D*self.t/self.a**2
@@ -71,7 +56,7 @@ class Chronoamperometry(Disc):
         # Fancy if statement using boolean operations:
         return (s<1.281)*f1 + (s>=1.281)*f2
 
-    def kinetic_limited(self, k0, alpha):
+    def ca(self, k0, alpha):
         fO = self.fun(self.DO)
         fR = self.fun(self.DR)
         Theta = 1 + (self.DO*fO/(self.DR*fR))*np.exp(self.n*F*(self.E-self.E0)/(R*T))
