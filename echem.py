@@ -23,11 +23,12 @@ class Voltammetry(Disc):
     '''
     '''
 
-    def __init__(self, E, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5):
+    def __init__(self, E, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5, noise=0):
         super().__init__(a, n, DO, CO)
         self.E = E
         self.E0 = E0
         self.DR = DR
+        self.noise = noise
         self.cv(k0, alpha)
 
     def cv(self, k0, alpha):
@@ -35,18 +36,20 @@ class Voltammetry(Disc):
         self.alpha = alpha
         self.Theta = 1 + (self.DO/self.DR)*np.exp(self.n*F*(self.E-self.E0)/(R*T))
         self.kappa = self.k0*np.exp(-self.alpha*self.n*F*(self.E-self.E0)/(R*T))
-        self.i = -(self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
+        i = -(self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
+        self.i = i + np.random.normal(size=self.E.size, scale=self.noise)
 
 
 
 class Chronoamperometry(Disc):
 
-    def __init__(self, t, E=-1, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5):
+    def __init__(self, t, E=-1, a=5e-4, n=1, CO=1e-6, DO=1e-5, DR=1e-5, E0=0, k0=1e8, alpha=0.5, noise=0):
         super().__init__(a, n, DO, CO)
         self.t = t
         self.E = E
         self.DR = DR
         self.E0 = E0
+        self.noise = noise
         self.ca(k0, alpha)
 
     def fun(self, D):
@@ -61,5 +64,5 @@ class Chronoamperometry(Disc):
         fR = self.fun(self.DR)
         Theta = 1 + (self.DO*fO/(self.DR*fR))*np.exp(self.n*F*(self.E-self.E0)/(R*T))
         kappa = (k0*self.a/(self.DO*fO))*np.exp(-alpha*self.n*F*(self.E-self.E0)/(R*T))
-        self.i = -(np.pi*self.n*F*self.DO*self.CO*self.a*fO/Theta)/(1+(np.pi/(kappa*Theta))*((2*kappa*Theta+3*np.pi)/(4*kappa*Theta+3*np.pi**2)))
-
+        i = -(np.pi*self.n*F*self.DO*self.CO*self.a*fO/Theta)/(1+(np.pi/(kappa*Theta))*((2*kappa*Theta+3*np.pi)/(4*kappa*Theta+3*np.pi**2)))
+        self.i = i + np.random.normal(size=self.t.size, scale=self.noise)
