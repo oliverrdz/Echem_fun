@@ -20,3 +20,8 @@ def plot(x, y, lab, xlab, ylab, mark=0, fig=1, show=False):
         else:
             plt.plot(x, y[i], label=lab[i])
     format_plot(xlab, ylab, show)
+
+def plot1(x, y, xlab, ylab, fig=1, show=False):
+    plt.figure(fig)
+    plt.plot(x, y)
+    format_plot(xlab, ylab, show)
