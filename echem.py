@@ -33,9 +33,10 @@ class Voltammetry(Disc):
 
     def cv(self, k0, alpha):
         self.k0 = k0
+        self.kappa0 = np.pi*self.k0*self.a/(4*self.DO)
         self.alpha = alpha
         self.Theta = 1 + (self.DO/self.DR)*np.exp(self.n*F*(self.E-self.E0)/(R*T))
-        self.kappa = self.k0*np.exp(-self.alpha*self.n*F*(self.E-self.E0)/(R*T))
+        self.kappa = self.kappa0*np.exp(-self.alpha*self.n*F*(self.E-self.E0)/(R*T))
         i = -(self.iLim/self.Theta)/(1+(np.pi/(self.kappa*self.Theta))*((2*self.kappa*self.Theta+3*np.pi)/(4*self.kappa*self.Theta+3*np.pi**2)))
         self.i = i + np.random.normal(size=self.E.size, scale=self.noise)
 
